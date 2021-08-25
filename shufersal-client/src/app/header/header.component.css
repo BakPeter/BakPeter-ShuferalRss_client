@@ -1,0 +1,12 @@
+h3 {
+  direction: rtl;
+}
+
+div {
+  background-color: skyblue;
+}
+
+a {
+  direction: rtl;
+  cursor: pointer;
+}

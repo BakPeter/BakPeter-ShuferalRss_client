@@ -1,0 +1,20 @@
+<div class="list-group" *ngIf="feed !== null">
+  <p class="list-group-item">{{ feed.title }}</p>
+</div>
+
+<div class="list-group" *ngIf="feed !== null">
+  <h6 class="list-group-item">{{ feed.pubDate }}</h6>
+</div>
+
+<div class="list-group" *ngIf="feed !== null">
+  <P class="list-group-item">{{ feed.summary }}</P>
+</div>
+<div class="list-group" *ngIf="feed !== null">
+  <a class="list-group-item" href="{{ feed.link }}" target="_blank">
+    לחץ לעבור לכתבה המלאה</a
+  >
+</div>
+
+<div class="list-group" *ngIf="feed === null">
+  <P class="list-group-item">לחץ על אייטם</P>
+</div>

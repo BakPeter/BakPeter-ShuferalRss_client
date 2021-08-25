@@ -1,0 +1,13 @@
+<ul class="list-group">
+  <a
+    class="list-group-item"
+    *ngFor="let item of feedItems; let i = index"
+    (click)="onItemClick(i)"
+  >
+    <app-feed-list-item [feedItem]="item"></app-feed-list-item>
+  </a>
+
+  <a class="list-group-item" *ngIf="feedItems.length === 0">
+    <h3>אין חדשות להציג</h3>
+  </a>
+</ul>
