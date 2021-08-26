@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommService } from '../app-services/comm-service.service';
+import { DataRepositoryService } from '../app-services/data-repository.service';
 
 @Component({
   selector: 'app-header',
@@ -7,11 +8,11 @@ import { CommService } from '../app-services/comm-service.service';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  constructor(private commServcie: CommService) {}
+  constructor(private dateRepService: DataRepositoryService) {}
 
   ngOnInit(): void {}
 
   updateData() {
-    this.commServcie.updateAndStoreFeeds();
+    this.dateRepService.updateData();
   }
 }

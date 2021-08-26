@@ -3,7 +3,6 @@ import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ItemModel } from 'src/app/app-models/item.model';
-import { CommService } from 'src/app/app-services/comm-service.service';
 import { DataRepositoryService } from 'src/app/app-services/data-repository.service';
 import { ListFeedItemModel } from '../list-feed-item-models/list-feed-item-model';
 
@@ -11,18 +10,24 @@ import { ListFeedItemModel } from '../list-feed-item-models/list-feed-item-model
   providedIn: 'root',
 })
 export class ListItemService implements OnDestroy {
-  dataUpdatetSubject = new Subject<ListFeedItemModel[]>();
-  onItemClickSubject = new Subject<number>();
+  dataUpdated$ = new Subject<ListFeedItemModel[]>();
+  dataUpdateting$ = new Subject<boolean>();
+  onItemClick$ = new Subject<number>();
 
-  private dataUpdatSubs: Subscription;
+  private dataUpdatedSubs: Subscription;
+  private dataUpdatingSubs: Subscription;
+
   private feedItems: ListFeedItemModel[];
   error: string;
 
-  constructor(
-    private comService: CommService,
-    private dataRepService: DataRepositoryService
-  ) {
-    this.dataUpdatSubs = this.dataRepService.dataUpdatetSubject
+  constructor(private dataRepService: DataRepositoryService) {
+    this.dataUpdatingSubs = this.dataRepService.dataUpdateding$.subscribe(
+      (status) => {
+        this.dataUpdateting$.next(status);
+      }
+    );
+
+    this.dataUpdatedSubs = this.dataRepService.dataUpdatet$
       .pipe<ListFeedItemModel[]>(
         map((feeds: ItemModel[]) => {
           if (feeds.length) {
@@ -41,7 +46,7 @@ export class ListItemService implements OnDestroy {
       .subscribe(
         (responseData) => {
           this.feedItems = responseData;
-          this.dataUpdatetSubject.next(this.feedItems);
+          this.dataUpdated$.next(this.feedItems);
         },
         (error) => {
           this.error = error;
@@ -50,10 +55,11 @@ export class ListItemService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.dataUpdatSubs.unsubscribe();
+    this.dataUpdatedSubs.unsubscribe();
+    this.dataUpdatingSubs.unsubscribe();
   }
 
   loadAndStoreFeeds() {
-    this.comService.loadAndStoreFeeds();
+    this.dataRepService.loadAndStoreFeeds();
   }
 }

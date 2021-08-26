@@ -1,8 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
-import { ItemModel } from '../app-models/item.model';
 import { ListFeedItemModel } from './feed-list-item/list-feed-item-models/list-feed-item-model';
 import { ListItemService } from './feed-list-item/services/list-tem.service';
 
@@ -14,13 +12,15 @@ import { ListItemService } from './feed-list-item/services/list-tem.service';
 export class FeedListComponent implements OnInit, OnDestroy {
   feedItems: Array<ListFeedItemModel> = [];
   private dataUpdatSubs: Subscription;
+  downloading: boolean = true;
 
   constructor(private liService: ListItemService) {}
 
   ngOnInit(): void {
-    this.dataUpdatSubs = this.liService.dataUpdatetSubject.subscribe(
+    this.dataUpdatSubs = this.liService.dataUpdated$.subscribe(
       (responseData) => {
         this.feedItems = responseData;
+        this.downloading = false;
       },
       (error) => {
         throw error;
@@ -36,6 +36,6 @@ export class FeedListComponent implements OnInit, OnDestroy {
 
   onItemClick(itemId: number) {
     console.log(itemId);
-    this.liService.onItemClickSubject.next(itemId);
+    this.liService.onItemClick$.next(itemId);
   }
 }

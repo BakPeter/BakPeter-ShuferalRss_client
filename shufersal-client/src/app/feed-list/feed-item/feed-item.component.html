@@ -1,5 +1,5 @@
 <div class="list-group" *ngIf="feed !== null">
-  <p class="list-group-item">{{ feed.title }}</p>
+  <p class="list-group-item" #title>{{ feed.title }}</p>
 </div>
 
 <div class="list-group" *ngIf="feed !== null">
@@ -7,7 +7,7 @@
 </div>
 
 <div class="list-group" *ngIf="feed !== null">
-  <P class="list-group-item">{{ feed.summary }}</P>
+  <P class="list-group-item" #summary>{{ feed.summary }}</P>
 </div>
 <div class="list-group" *ngIf="feed !== null">
   <a class="list-group-item" href="{{ feed.link }}" target="_blank">
@@ -15,6 +15,6 @@
   >
 </div>
 
-<div class="list-group" *ngIf="feed === null">
+<div class="list-group" *ngIf="!dataUpdating || feed === null">
   <P class="list-group-item">לחץ על אייטם</P>
 </div>

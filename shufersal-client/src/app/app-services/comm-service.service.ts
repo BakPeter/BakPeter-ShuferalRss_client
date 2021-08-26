@@ -9,12 +9,15 @@ import { LodaDataResponse } from '../app-models/loaddata.response.model';
   providedIn: 'root',
 })
 export class CommService {
-  dataUpdated = new Subject<ItemModel[]>();
+  dataUpdated$ = new Subject<ItemModel[]>();
+  dataUpdateding$ = new Subject<boolean>();
 
   constructor(private httpClient: HttpClient) {}
 
   //https://localhost:44379/api/loaddata
   loadAndStoreFeeds() {
+    this.dataUpdateding$.next(true);
+
     var remoteAddress = '/api/loaddata';
     var httpOptions = {
       headers: new HttpHeaders({
@@ -29,19 +32,25 @@ export class CommService {
     );
     getData.subscribe(
       (response) => {
+        this.dataUpdateding$.next(false);
+
         if (response.requestSuccess) {
-          this.dataUpdated.next(response.data);
+          this.dataUpdated$.next(response.data);
         } else {
           throw response.error;
         }
       },
       (error) => {
-        this.dataUpdated.next(error);
+        this.dataUpdateding$.next(false);
+
+        this.dataUpdated$.next(error);
       }
     );
   }
 
   updateAndStoreFeeds() {
+    this.dataUpdateding$.next(true);
+
     // var remoteAddress = 'https://localhost:44379/api/updatedata';
     var remoteAddress = 'api/updatedata';
     var httpOptions = {
@@ -57,13 +66,13 @@ export class CommService {
     getData.subscribe(
       (response) => {
         if (response.requestSuccess) {
-          this.dataUpdated.next(response.data);
+          this.dataUpdated$.next(response.data);
         } else {
           throw response.error;
         }
       },
       (error) => {
-        this.dataUpdated.next(error);
+        this.dataUpdated$.next(error);
       }
     );
   }
